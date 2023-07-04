@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     val columnCount = 13
     val rowCount = 5
-    var heroIndex = 0
+    var heroIndex = 26
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,20 +131,97 @@ class MainActivity : AppCompatActivity() {
         setMomotarou()
 
         // タッチイベントリスナーの設定
-        gridLayout.setOnTouchListener { _, event ->
-            val touchedImageView = getTouchedImageView(event)
+//        gridLayout.setOnTouchListener { _, event ->
+            gridLayout.setOnTouchListener { view, event: MotionEvent ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        val touchedImageView = getTouchedImageView(event)
 
-            val touchedPosition = if (touchedImageView != null) {getPositionFromImageView(touchedImageView)}
-            else { -1 }
+                        val touchedPosition = if (touchedImageView != null) {
+                            getPositionFromImageView(touchedImageView)
+                        } else {
+                            -1
+                        }
 
-            if (touchedPosition > heroIndex) {
-                moveHeroRight()
-            } else if (touchedPosition != -1 && touchedPosition < heroIndex) {
-                moveHeroLeft()
-            }
+                        if ((touchedPosition/columnCount == heroIndex/columnCount) && (touchedPosition > heroIndex && heroIndex != 36) && (touchedPosition > heroIndex && heroIndex != 46)) {
+                            moveHeroRight()
+                        } else if (touchedPosition != -1 && (touchedPosition/columnCount == heroIndex/columnCount) && touchedPosition < heroIndex) {
+                            moveHeroLeft()
+                        }
+//
+//                        val columnIndex = touchedPosition % columnCount
+//                            val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
+//                            val backgroundDrawable = heroImageView?.background
+//                            val drawableString =
+//                                backgroundDrawable?.constantState?.newDrawable()?.toString()
+//
+//                        if (touchedPosition != null && columnIndex == heroIndex % columnCount) {
+//
+//                            val validDrawables = setOf("a2.png", "a5.png", "a6.png", "a8.png", "a9.png", "a10.png", "a11.png")
+//                            val drawableString = backgroundDrawable?.constantState?.newDrawable()?.toString()
+//
+//                            if (drawableString in validDrawables) {
+//                                if (touchedPosition < heroIndex) {
+//                                    moveHeroUp()
+//                                } else if (touchedPosition > heroIndex) {
+//                                    moveHeroDown()
+//                                }
+//                            }
+//                        }
+//
+//
+////                        if (touchedPosition != null) {
+////                            val columnIndex = touchedPosition % columnCount
+////                            val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
+////                            val backgroundDrawable = heroImageView?.background
+////                            val drawableString =
+////                                backgroundDrawable?.constantState?.newDrawable()?.toString()
+////                            if (drawableString != null) {
+////                                if (columnIndex == heroIndex % columnCount) {
+////
+////                                    val validDrawables = listOf("a2.png", "a5.png", "a6.png", "a8.png", "a9.png", "a10.png", "a11.png")
+////
+////                                    if (touchedPosition < heroIndex && validDrawables.contains(drawableString)) {
+////                                        moveHeroUp()
+////                                    }
+////                                    else if (touchedPosition > heroIndex && validDrawables.contains(drawableString)) {
+////                                        moveHeroDown()
+////                                    }
+////
+////
+//////                                    if (touchedPosition < heroIndex && (drawableString?.equals("a2.png") == true || drawableString?.equals("a5.png") == true|| drawableString?.equals("a6.png") == true || drawableString?.equals("a8.png") == true || drawableString?.equals("a9.png") == true || drawableString?.equals("a10.png") == true || drawableString?.equals("a11.png") == true )) {
+//////                                        moveHeroUp()
+//////                                    }
+//////                                    if (touchedPosition > heroIndex && (drawableString?.equals("a2.png") == true || drawableString?.equals("a3.png") == true|| drawableString?.equals("a4.png") == true || drawableString?.equals("a7.png") == true || drawableString?.equals("a8.png") == true || drawableString?.equals("a10.png") == true || drawableString?.equals("a11.png") == true )) {
+//////                                        moveHeroDown()
+//////                                    }
+////                                }
+////                            }
+////                        }
 
+                            val columnIndex = touchedPosition % columnCount
+                            if (columnIndex == heroIndex % columnCount) {
+                                if (touchedPosition < heroIndex && isUpSpecialHeroIndex(heroIndex)) {
+                                    moveHeroUp()
+                                }
+                                if (touchedPosition > heroIndex && isDownSpecialHeroIndex(heroIndex)) {
+                                    moveHeroDown()
+                                }
+                            }
+                    }
+                }
             true
         }
+    }
+
+    private fun isDownSpecialHeroIndex(heroIndex: Int): Boolean {
+        val specialIndices = setOf(0, 2, 5, 7, 10, 12, 13, 16, 18, 21, 23, 26, 28, 31, 33)
+        return heroIndex in specialIndices
+    }
+
+    private fun isUpSpecialHeroIndex(heroIndex: Int): Boolean {
+        val specialIndices = setOf(13, 15, 18, 20, 23, 25, 26, 29, 31, 34, 36, 39, 41, 44, 46)
+        return heroIndex in specialIndices
     }
 
     private fun getTouchedImageView(event: MotionEvent): ImageView? {
@@ -205,9 +282,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun moveHeroUp() {
+        val gridLayout: GridLayout = findViewById(R.id.gridLayout)
+        val targetImageView = gridLayout.getChildAt(heroIndex - columnCount) as? ImageView
+        if (targetImageView != null) {
+            // 移動先の ImageView に hero の画像を設定するなどの処理を行う
+            targetImageView.setImageResource(R.drawable.momotarou)
+        }
+        val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
+        if (heroImageView != null)
+            heroImageView.setImageDrawable(null)
+        heroIndex = heroIndex - columnCount // hero の位置を更新する
+    }
+
+    private fun moveHeroDown() {
+        val gridLayout: GridLayout = findViewById(R.id.gridLayout)
+        val targetImageView = gridLayout.getChildAt(heroIndex + columnCount) as? ImageView
+        if (targetImageView != null) {
+            // 移動先の ImageView に hero の画像を設定するなどの処理を行う
+            targetImageView.setImageResource(R.drawable.momotarou)
+        }
+        val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
+        if (heroImageView != null)
+            heroImageView.setImageDrawable(null)
+        heroIndex = heroIndex + columnCount // hero の位置を更新する
+    }
+
     private fun setMomotarou() {
             val gridLayout: GridLayout = findViewById(R.id.gridLayout)
-            val imageView: ImageView = gridLayout.getChildAt(0) as ImageView
+            val imageView: ImageView = gridLayout.getChildAt(26) as ImageView
             imageView.setImageResource(R.drawable.momotarou)
     }
 }
