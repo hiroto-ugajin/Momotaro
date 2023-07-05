@@ -9,6 +9,10 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import jp.kanoyastore.hiroto.ugajin.momotaro.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 private lateinit var binding: ActivityMainBinding
@@ -18,6 +22,11 @@ class MainActivity : AppCompatActivity() {
     val columnCount = 13
     val rowCount = 5
     var heroIndex = 0
+
+    var heroPower = 0
+    var hasMeat = false
+    var hasBanana = false
+    var hasBeans = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -155,6 +164,7 @@ class MainActivity : AppCompatActivity() {
                 if (imageView != null) {
                     val characterResource = characterArray[characterIndex]
                     imageView.setImageResource(characterResource)
+                    imageView.tag = characterIndex
                     occupiedIndices.add(randomIndex)
                     characterIndex += 1
                 }
@@ -180,7 +190,6 @@ class MainActivity : AppCompatActivity() {
                         } else if (touchedPosition != -1 && (touchedPosition/columnCount == heroIndex/columnCount) && touchedPosition < heroIndex) {
                             moveHeroLeft()
                         }
-
 
                             val columnIndex = touchedPosition % columnCount
                             if (columnIndex == heroIndex % columnCount) {
@@ -233,13 +242,12 @@ class MainActivity : AppCompatActivity() {
             return row * columnCount + column
     }
 
-    // hero を左に移動する関数
     private fun moveHeroLeft() {
         val gridLayout: GridLayout = findViewById(R.id.gridLayout)
         if (heroIndex % columnCount != 0) {
             val targetImageView = gridLayout.getChildAt(heroIndex - 1) as? ImageView
             if (targetImageView != null) {
-                    // 移動先の ImageView に hero の画像を設定するなどの処理を行う
+                handleHeroMove()
                 targetImageView.setImageResource(R.drawable.momotarou)}
             val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
             if (heroImageView != null) {
@@ -251,12 +259,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun moveHeroRight() {
         val gridLayout: GridLayout = findViewById(R.id.gridLayout)
-        // ヒーローを右に移動する処理
         if (heroIndex % columnCount != columnCount - 1) {
             val targetImageView = gridLayout.getChildAt(heroIndex + 1) as? ImageView
             if (targetImageView != null) {
-                    // 移動先の ImageView に hero の画像を設定するなどの処理を行う
-                    targetImageView.setImageResource(R.drawable.momotarou)
+                handleHeroMove()
+                targetImageView.setImageResource(R.drawable.momotarou)
             }
             val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
             if (heroImageView != null)
@@ -269,7 +276,7 @@ class MainActivity : AppCompatActivity() {
         val gridLayout: GridLayout = findViewById(R.id.gridLayout)
         val targetImageView = gridLayout.getChildAt(heroIndex - columnCount) as? ImageView
         if (targetImageView != null) {
-            // 移動先の ImageView に hero の画像を設定するなどの処理を行う
+            handleHeroMove()
             targetImageView.setImageResource(R.drawable.momotarou)
         }
         val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
@@ -282,13 +289,89 @@ class MainActivity : AppCompatActivity() {
         val gridLayout: GridLayout = findViewById(R.id.gridLayout)
         val targetImageView = gridLayout.getChildAt(heroIndex + columnCount) as? ImageView
         if (targetImageView != null) {
-            // 移動先の ImageView に hero の画像を設定するなどの処理を行う
+            handleHeroMove()
             targetImageView.setImageResource(R.drawable.momotarou)
         }
         val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
         if (heroImageView != null)
             heroImageView.setImageDrawable(null)
         heroIndex = heroIndex + columnCount // hero の位置を更新する
+    }
+
+    private fun handleHeroMove() {
+        val gridLayout: GridLayout = findViewById(R.id.gridLayout)
+        val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
+        val heroTag = heroImageView?.tag
+
+        // 特定のタグのimageViewに来た場合の処理
+        if (heroTag == 0) {
+            // 特定のタグのimageViewに来た時の処理をここに記述する
+            hasMeat = true
+            val jumpToImageView = gridLayout.getChildAt(49) as? ImageView
+            jumpToImageView?.setImageResource(R.drawable.meat)
+        }
+        if (heroTag == 1) {
+            // 特定のタグのimageViewに来た時の処理をここに記述する
+            hasBanana = true
+            val jumpToImageView = gridLayout.getChildAt(50) as? ImageView
+            jumpToImageView?.setImageResource(R.drawable.banana)
+        }
+        if (heroTag == 2) {
+            // 特定のタグのimageViewに来た時の処理をここに記述する
+            hasBeans = true
+            val jumpToImageView = gridLayout.getChildAt(51) as? ImageView
+            jumpToImageView?.setImageResource(R.drawable.beans)
+        }
+        if (heroTag == 3) {
+            // 特定のタグのimageViewに来た時の処理をここに記述する
+            val jumpToImageView = gridLayout.getChildAt(62) as? ImageView
+            jumpToImageView?.setImageResource(R.drawable.peach)
+        }
+        if (heroTag == 4) {
+            // 特定のタグのimageViewに来た時の処理をここに記述する
+            val jumpToImageView = gridLayout.getChildAt(63) as? ImageView
+            jumpToImageView?.setImageResource(R.drawable.peach)
+            // ...
+        }
+        if (heroTag == 5) {
+            // 特定のタグのimageViewに来た時の処理をここに記述する
+            val jumpToImageView = gridLayout.getChildAt(64) as? ImageView
+            jumpToImageView?.setImageResource(R.drawable.peach)
+            // ...
+        }
+        if (heroTag == 6) {
+            if (hasMeat == true) {
+                val jumpToImageView = gridLayout.getChildAt(49) as? ImageView
+                jumpToImageView?.setImageResource(R.drawable.dog)
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(200)
+                    heroImageView.setImageResource(R.drawable.dog)
+                }
+            }
+        }
+        if (heroTag == 7) {
+            if (hasBanana == true) {
+                val jumpToImageView = gridLayout.getChildAt(50) as? ImageView
+                jumpToImageView?.setImageResource(R.drawable.monkey)
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(200)
+                    heroImageView.setImageResource(R.drawable.monkey)
+                }
+            }
+        }
+        if (heroTag == 8) {
+            if (hasBeans == true) {
+                val jumpToImageView = gridLayout.getChildAt(51) as? ImageView
+                jumpToImageView?.setImageResource(R.drawable.bird)
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(200)
+                    heroImageView.setImageResource(R.drawable.bird)
+                }
+            }
+        }
     }
 
     private fun setMomotarou() {
