@@ -15,7 +15,6 @@ private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-
     val columnCount = 13
     val rowCount = 5
     var heroIndex = 0
@@ -143,18 +142,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // キャラクターをランダムに配置する
         val random = Random()
         val excludedIndices = setOf(0, 1, 2, 13, 37, 38) // 除外するインデックスのセット
         val occupiedIndices = mutableSetOf<Int>() // すでにキャラクターが配置されているインデックスのセット
-// キャラクターをランダムに配置する
-        while (occupiedIndices.size < 11) {
+        var characterIndex = 0
+
+        while (occupiedIndices.size < 11)  {
             val randomIndex = random.nextInt(47)
             if (randomIndex !in excludedIndices && randomIndex !in occupiedIndices) {
                 val imageView = gridLayout.getChildAt(randomIndex) as? ImageView
                 if (imageView != null) {
-                    val characterResource = characterArray[random.nextInt(characterArray.size)]
+                    val characterResource = characterArray[characterIndex]
                     imageView.setImageResource(characterResource)
                     occupiedIndices.add(randomIndex)
+                    characterIndex += 1
                 }
             }
         }
