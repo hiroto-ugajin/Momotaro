@@ -20,7 +20,7 @@ private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-//    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var mediaPlayer: MediaPlayer
 
     val columnCount = 13
     val rowCount = 5
@@ -28,17 +28,13 @@ class MainActivity : AppCompatActivity() {
     var heroIndex = 0
 
 
-    var heroPower = 0
+    var heroPower = 1
     var hasMeat = false
     var hasBanana = false
     var hasBeans = false
     var reachGame = false
 
-//    val mediaPlayerNice = MediaPlayer.create(this, R.raw.nicesound)
-//    val mediaPlayerSmallNice = MediaPlayer.create(this, R.raw.smallnice)
-//    val mediaPlayerDog = MediaPlayer.create(this, R.raw.dog)
-//    val mediaPlayerVictory = MediaPlayer.create(this, R.raw.victory)
-//    val mediaPlayerThunder = MediaPlayer.create(this, R.raw.thunder)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +46,12 @@ class MainActivity : AppCompatActivity() {
         val squareSize = (resources.displayMetrics.widthPixels) / columnCount
 
         val gridLayout: GridLayout = findViewById(R.id.gridLayout)
+
+        val mediaPlayerNice = MediaPlayer.create(this, R.raw.nicesound)
+        val mediaPlayerSmallNice = MediaPlayer.create(this, R.raw.smallnice)
+        val mediaPlayerDog = MediaPlayer.create(this, R.raw.dog)
+        val mediaPlayerVictory = MediaPlayer.create(this, R.raw.victory)
+        val mediaPlayerThunder = MediaPlayer.create(this, R.raw.thunder)
 
         val characterArray = arrayOf( R.drawable.meat,
             R.drawable.banana,
@@ -218,9 +220,11 @@ class MainActivity : AppCompatActivity() {
                                 }
                             else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                 blueDemonImageView!!.setImageResource(R.drawable.maru100)
+                                heroPower += 1
+                                blueDemonImageView!!.setTag(null)
+                            } else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
+                                mediaPlayerVictory.start()
                             }
-
-
                         }
 
                             val columnIndex = touchedPosition % columnCount
