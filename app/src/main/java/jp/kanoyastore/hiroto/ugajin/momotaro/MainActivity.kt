@@ -27,13 +27,10 @@ class MainActivity : AppCompatActivity() {
 
     var heroIndex = 0
 
-
     var heroPower = 0
     var hasMeat = false
     var hasBanana = false
     var hasBeans = false
-//    var reachGame = false
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,7 +142,6 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-
         // ImageViewを追加
         for (i in 0 until rowCount) {
             for (j in 0 until columnCount) {
@@ -201,17 +197,12 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             -1
                         }
-
 //                        タグからimageViewを探し出す処理
                         val blueDemonImageView: ImageView? = gridLayout.findViewWithTag(9)
                         val redDemonImageView: ImageView? = gridLayout.findViewWithTag(10)
 
-
                         if ((touchedPosition/columnCount == heroIndex/columnCount) && (touchedPosition > heroIndex && heroIndex != 36) && (touchedPosition > heroIndex && heroIndex != 46)) {
                             moveHeroRight()
-
-
-
                             if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                 blueDemonImageView!!.setImageResource(R.drawable.batsu100)
                                 mediaPlayerThunder.start()
@@ -239,11 +230,8 @@ class MainActivity : AppCompatActivity() {
                             }
 
 
-
                         } else if (touchedPosition != -1 && (touchedPosition/columnCount == heroIndex/columnCount) && touchedPosition < heroIndex) {
                             moveHeroLeft()
-
-
                             if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                 blueDemonImageView!!.setImageResource(R.drawable.batsu100)
                                 mediaPlayerThunder.start()
@@ -269,19 +257,64 @@ class MainActivity : AppCompatActivity() {
                             } else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                 mediaPlayerVictory.start()
                             }
-
-
-
-
                         }
 
                             val columnIndex = touchedPosition % columnCount
                             if (columnIndex == heroIndex % columnCount) {
                                 if (touchedPosition < heroIndex && isUpSpecialHeroIndex(heroIndex)) {
                                     moveHeroUp()
+                                    if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
+                                        blueDemonImageView!!.setImageResource(R.drawable.batsu100)
+                                        mediaPlayerThunder.start()
+                                    }
+                                    else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
+                                        blueDemonImageView!!.setImageResource(R.drawable.maru100)
+                                        heroPower += 1
+                                        blueDemonImageView!!.setTag(null)
+                                        mediaPlayerNice.start()
+                                    } else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
+                                        mediaPlayerVictory.start()
+                                    }
+                                    if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
+                                        redDemonImageView!!.setImageResource(R.drawable.batsu100)
+                                        mediaPlayerThunder.start()
+                                    }
+                                    else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
+                                        redDemonImageView!!.setImageResource(R.drawable.maru100)
+                                        heroPower += 1
+                                        mediaPlayerNice.start()
+                                        redDemonImageView!!.setTag(null)
+                                    } else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
+                                        mediaPlayerVictory.start()
+                                    }
+
                                 }
                                 if (touchedPosition > heroIndex && isDownSpecialHeroIndex(heroIndex)) {
                                     moveHeroDown()
+                                    if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
+                                        blueDemonImageView!!.setImageResource(R.drawable.batsu100)
+                                        mediaPlayerThunder.start()
+                                    }
+                                    else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
+                                        blueDemonImageView!!.setImageResource(R.drawable.maru100)
+                                        heroPower += 1
+                                        blueDemonImageView!!.setTag(null)
+                                        mediaPlayerNice.start()
+                                    } else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
+                                        mediaPlayerVictory.start()
+                                    }
+                                    if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
+                                        redDemonImageView!!.setImageResource(R.drawable.batsu100)
+                                        mediaPlayerThunder.start()
+                                    }
+                                    else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
+                                        redDemonImageView!!.setImageResource(R.drawable.maru100)
+                                        heroPower += 1
+                                        mediaPlayerNice.start()
+                                        redDemonImageView!!.setTag(null)
+                                    } else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
+                                        mediaPlayerVictory.start()
+                                    }
                                 }
                             }
                     }
@@ -334,7 +367,6 @@ class MainActivity : AppCompatActivity() {
             val heroTag = heroImageView?.tag
             if (targetImageView != null) {
                 if (heroTag == 9 && 3 <= heroPower && heroPower < 6) {
-//                    reachGame = true
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(200)
                         heroImageView.setImageResource(R.drawable.bluedemon)
@@ -342,7 +374,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 if (heroTag == 10 && 3 <= heroPower && heroPower < 6) {
-//                    reachGame = true
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(200)
                         heroImageView.setImageResource(R.drawable.reddemon)
@@ -354,7 +385,6 @@ class MainActivity : AppCompatActivity() {
                     handleHeroMove()
                 }
             }
-
             if (heroImageView != null) {
                 heroImageView.setImageDrawable(null)
                 heroIndex -= 1 // hero の位置を更新する
@@ -368,12 +398,8 @@ class MainActivity : AppCompatActivity() {
             val targetImageView = gridLayout.getChildAt(heroIndex + 1) as? ImageView
             val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
             val heroTag = heroImageView?.tag
-
-
-
             if (targetImageView != null) {
                 if (heroTag == 9 && 3 <= heroPower && heroPower < 6) {
-//                    reachGame = true
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(200)
                         heroImageView.setImageResource(R.drawable.bluedemon)
@@ -381,7 +407,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 if (heroTag == 10 && 3 <= heroPower && heroPower < 6) {
-//                    reachGame = true
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(200)
                         heroImageView.setImageResource(R.drawable.reddemon)
@@ -393,9 +418,6 @@ class MainActivity : AppCompatActivity() {
                     handleHeroMove()
                 }
             }
-
-
-
             if (heroImageView != null) {
                 heroImageView.setImageDrawable(null)
                 heroIndex += 1 // hero の位置を更新する
@@ -405,25 +427,60 @@ class MainActivity : AppCompatActivity() {
 
     private fun moveHeroUp() {
         val gridLayout: GridLayout = findViewById(R.id.gridLayout)
-        val targetImageView = gridLayout.getChildAt(heroIndex - columnCount) as? ImageView
-        if (targetImageView != null) {
-            targetImageView.setImageResource(R.drawable.momotarou)
-            handleHeroMove()
-        }
-        val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
-        if (heroImageView != null)
-            heroImageView.setImageDrawable(null)
-        heroIndex = heroIndex - columnCount // hero の位置を更新する
+            val targetImageView = gridLayout.getChildAt(heroIndex - columnCount) as? ImageView
+            val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
+            val heroTag = heroImageView?.tag
+            if (targetImageView != null) {
+                if (heroTag == 9 && 3 <= heroPower && heroPower < 6) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(200)
+                        heroImageView.setImageResource(R.drawable.bluedemon)
+                        targetImageView.setImageResource(R.drawable.momotarou)
+                    }
+                }
+                if (heroTag == 10 && 3 <= heroPower && heroPower < 6) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(200)
+                        heroImageView.setImageResource(R.drawable.reddemon)
+                        targetImageView.setImageResource(R.drawable.momotarou)
+                    }
+                }
+                else {
+                    targetImageView.setImageResource(R.drawable.momotarou)
+                    handleHeroMove()
+                }
+            }
+            if (heroImageView != null)
+                heroImageView.setImageDrawable(null)
+            heroIndex = heroIndex - columnCount // hero の位置を更新する
     }
 
     private fun moveHeroDown() {
         val gridLayout: GridLayout = findViewById(R.id.gridLayout)
         val targetImageView = gridLayout.getChildAt(heroIndex + columnCount) as? ImageView
-        if (targetImageView != null) {
-            targetImageView.setImageResource(R.drawable.momotarou)
-            handleHeroMove()
-        }
         val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
+        val heroTag = heroImageView?.tag
+        if (targetImageView != null) {
+            if (heroTag == 9 && 3 <= heroPower && heroPower < 6) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(200)
+                    heroImageView.setImageResource(R.drawable.bluedemon)
+                    targetImageView.setImageResource(R.drawable.momotarou)
+                }
+            }
+            if (heroTag == 10 && 3 <= heroPower && heroPower < 6) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(200)
+                    heroImageView.setImageResource(R.drawable.reddemon)
+                    targetImageView.setImageResource(R.drawable.momotarou)
+                }
+            }
+            else {
+                targetImageView.setImageResource(R.drawable.momotarou)
+                handleHeroMove()
+            }
+        }
+
         if (heroImageView != null)
             heroImageView.setImageDrawable(null)
         heroIndex = heroIndex + columnCount // hero の位置を更新する
@@ -464,14 +521,12 @@ class MainActivity : AppCompatActivity() {
             val jumpToImageView = gridLayout.getChildAt(63) as? ImageView
             jumpToImageView?.setImageResource(R.drawable.peach)
             heroImageView.setTag(null)
-            // ...
         }
         if (heroTag == 5) {
             heroPower += 1
             val jumpToImageView = gridLayout.getChildAt(64) as? ImageView
             jumpToImageView?.setImageResource(R.drawable.peach)
             heroImageView.setTag(null)
-            // ...
         }
         if (heroTag == 6) {
             if (hasMeat == true) {
@@ -515,45 +570,8 @@ class MainActivity : AppCompatActivity() {
             }
             }
         }
-//        if (heroTag == 9) {
-//            if (heroPower < 3) {
-//                val blueDemonImageView: ImageView? = gridLayout.findViewWithTag(9)
-//                if (blueDemonImageView != null) {
-//                    blueDemonImageView.setImageResource(R.drawable.batsu100)
-////                heroImageView.setImageResource(R.drawable.batsu100)
-//                }
-//            }
-//            if (3 <= heroPower && heroPower < 6) {
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    delay(200)
-//                    heroImageView.setImageResource(R.drawable.bluedemon)
-//                }
-//            }
-//        }
-
-
-//        if (heroTag == 10) {
-//            if (heroPower == 0) {
-//                heroImageView.setImageResource(R.drawable.batsu100)
-//            } else if (0 < heroPower && heroPower <= 3) {
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    delay(200)
-//                    heroImageView.setImageResource(R.drawable.reddemon)
-//                }
-//            } else  {
-//                mediaPlayerVictory.start()
-//            }
-//        }
     }
 
-    private fun tieHeroDemon() {
-        val gridLayout: GridLayout = findViewById(R.id.gridLayout)
-        val heroImageView = gridLayout.getChildAt(heroIndex) as? ImageView
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(200)
-            heroImageView!!.setImageResource(R.drawable.bluedemon)
-        }
-    }
     private fun setMomotarou() {
             val gridLayout: GridLayout = findViewById(R.id.gridLayout)
             val imageView: ImageView = gridLayout.getChildAt(0) as ImageView
