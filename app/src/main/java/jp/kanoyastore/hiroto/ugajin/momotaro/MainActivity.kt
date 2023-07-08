@@ -2,18 +2,18 @@ package jp.kanoyastore.hiroto.ugajin.momotaro
 
 import android.graphics.Color
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.GridLayout
-import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import jp.kanoyastore.hiroto.ugajin.momotaro.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import java.util.*
 
 private lateinit var binding: ActivityMainBinding
@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     var startTime = 0L // 開始時間を保持する変数
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -53,7 +55,8 @@ class MainActivity : AppCompatActivity() {
         val mediaPlayerVictory = MediaPlayer.create(this, R.raw.victory)
         val mediaPlayerThunder = MediaPlayer.create(this, R.raw.thunder)
 
-        val characterArray = arrayOf( R.drawable.meat,
+        val characterArray = arrayOf(
+            R.drawable.meat,
             R.drawable.banana,
             R.drawable.beans,
             R.drawable.peach,
@@ -64,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.bird,
             R.drawable.bluedemon,
             R.drawable.reddemon,
-         )
+        )
 
         val imageResources = arrayOf(
             arrayOf(
@@ -196,10 +199,13 @@ class MainActivity : AppCompatActivity() {
                 val currentTime = System.currentTimeMillis() // 現在の時間
                 val elapsedTime = currentTime - startTime // 経過時間（ミリ秒）
                 val secondsElapsed = elapsedTime / 1000 // 経過時間（秒）
+                val decimalFormat = DecimalFormat("#.#") // 小数点第一位まで表示するフォーマット
+                val `$formattedSeconds` = decimalFormat.format(secondsElapsed)
+
                 // 経過時間を表示するなどの処理を行う
                 runOnUiThread {
                     // UIの更新をメインスレッドで行う
-                    binding.timerTextView.text = "経過時間: ${secondsElapsed}秒"
+                    binding.timerTextView.text = "経過時間：${`$formattedSeconds`}"
                 }
             }
         }

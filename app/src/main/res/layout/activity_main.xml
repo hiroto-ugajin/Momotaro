@@ -36,7 +36,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
-            android:text="経過時間：0 秒"
+            android:text="経過時間：0"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
