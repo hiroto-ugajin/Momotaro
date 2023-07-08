@@ -32,6 +32,9 @@ class MainActivity : AppCompatActivity() {
     var hasBanana = false
     var hasBeans = false
 
+    var isFirstTouch = true
+    var startTime = 0L // 開始時間を保持する変数
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,10 +188,50 @@ class MainActivity : AppCompatActivity() {
 
         setMomotarou()
 
+//        val startTime = System.currentTimeMillis() // ゲーム開始時の時間
+
+        val timer = Timer()
+        val timerTask = object : TimerTask() {
+            override fun run() {
+                val currentTime = System.currentTimeMillis() // 現在の時間
+                val elapsedTime = currentTime - startTime // 経過時間（ミリ秒）
+                val secondsElapsed = elapsedTime / 1000 // 経過時間（秒）
+                // 経過時間を表示するなどの処理を行う
+                runOnUiThread {
+                    // UIの更新をメインスレッドで行う
+                    binding.timerTextView.text = "経過時間: ${secondsElapsed}秒"
+                }
+            }
+        }
+
+// スタートボタンのクリックリスナー
+        fun startTimer() {
+            timer.scheduleAtFixedRate(timerTask, 0, 1000) // 1秒ごとにタイマータスクを実行する
+        }
+
+        fun gameEnd() {
+        timer.cancel()
+        binding.centerTextView.text = "DEFEAT"
+        binding.gridLayout.setOnTouchListener(null)
+    }
+
+        fun gameEnd2() {
+            timer.cancel()
+            binding.centerTextView.text = "VICTORY"
+            binding.gridLayout.setOnTouchListener(null)
+        }
+
+
         // タッチイベントリスナーの設定
             gridLayout.setOnTouchListener { view, event: MotionEvent ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
+
+                        if (isFirstTouch) {
+                        startTime = System.currentTimeMillis() // 開始時間を設定
+                        startTimer()
+                            isFirstTouch = false }
+
                         val touchedImageView = getTouchedImageView(event)
 
                         val touchedPosition = if (touchedImageView != null) {
@@ -206,6 +249,7 @@ class MainActivity : AppCompatActivity() {
                             if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                 blueDemonImageView!!.setImageResource(R.drawable.batsu100)
                                 mediaPlayerThunder.start()
+                                gameEnd()
                             }
                             else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                 blueDemonImageView!!.setImageResource(R.drawable.maru100)
@@ -214,11 +258,13 @@ class MainActivity : AppCompatActivity() {
                                 mediaPlayerNice.start()
                             } else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                 mediaPlayerVictory.start()
+                                gameEnd2()
                             }
 
                             if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                 redDemonImageView!!.setImageResource(R.drawable.batsu100)
                                 mediaPlayerThunder.start()
+                                gameEnd()
                             }
                             else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                 redDemonImageView!!.setImageResource(R.drawable.maru100)
@@ -227,6 +273,7 @@ class MainActivity : AppCompatActivity() {
                                 redDemonImageView!!.setTag(null)
                             } else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                 mediaPlayerVictory.start()
+                                gameEnd2()
                             }
 
 
@@ -235,6 +282,7 @@ class MainActivity : AppCompatActivity() {
                             if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                 blueDemonImageView!!.setImageResource(R.drawable.batsu100)
                                 mediaPlayerThunder.start()
+                                gameEnd()
                                 }
                             else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                 blueDemonImageView!!.setImageResource(R.drawable.maru100)
@@ -243,11 +291,13 @@ class MainActivity : AppCompatActivity() {
                                 mediaPlayerNice.start()
                             } else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                 mediaPlayerVictory.start()
+                                gameEnd2()
                             }
 
                             if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                 redDemonImageView!!.setImageResource(R.drawable.batsu100)
                                 mediaPlayerThunder.start()
+                                gameEnd()
                             }
                             else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                 redDemonImageView!!.setImageResource(R.drawable.maru100)
@@ -256,6 +306,7 @@ class MainActivity : AppCompatActivity() {
                                 redDemonImageView!!.setTag(null)
                             } else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                 mediaPlayerVictory.start()
+                                gameEnd2()
                             }
                         }
 
@@ -266,6 +317,7 @@ class MainActivity : AppCompatActivity() {
                                     if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                         blueDemonImageView!!.setImageResource(R.drawable.batsu100)
                                         mediaPlayerThunder.start()
+                                        gameEnd()
                                     }
                                     else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                         blueDemonImageView!!.setImageResource(R.drawable.maru100)
@@ -274,10 +326,12 @@ class MainActivity : AppCompatActivity() {
                                         mediaPlayerNice.start()
                                     } else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                         mediaPlayerVictory.start()
+                                        gameEnd2()
                                     }
                                     if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                         redDemonImageView!!.setImageResource(R.drawable.batsu100)
                                         mediaPlayerThunder.start()
+                                        gameEnd()
                                     }
                                     else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                         redDemonImageView!!.setImageResource(R.drawable.maru100)
@@ -286,14 +340,15 @@ class MainActivity : AppCompatActivity() {
                                         redDemonImageView!!.setTag(null)
                                     } else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                         mediaPlayerVictory.start()
+                                        gameEnd2()
                                     }
-
                                 }
                                 if (touchedPosition > heroIndex && isDownSpecialHeroIndex(heroIndex)) {
                                     moveHeroDown()
                                     if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                         blueDemonImageView!!.setImageResource(R.drawable.batsu100)
                                         mediaPlayerThunder.start()
+                                        gameEnd()
                                     }
                                     else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                         blueDemonImageView!!.setImageResource(R.drawable.maru100)
@@ -302,10 +357,12 @@ class MainActivity : AppCompatActivity() {
                                         mediaPlayerNice.start()
                                     } else if (blueDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                         mediaPlayerVictory.start()
+                                        gameEnd2()
                                     }
                                     if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 3 > heroPower) {
                                         redDemonImageView!!.setImageResource(R.drawable.batsu100)
                                         mediaPlayerThunder.start()
+                                        gameEnd()
                                     }
                                     else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 6 == heroPower) {
                                         redDemonImageView!!.setImageResource(R.drawable.maru100)
@@ -314,6 +371,7 @@ class MainActivity : AppCompatActivity() {
                                         redDemonImageView!!.setTag(null)
                                     } else if (redDemonImageView == gridLayout.getChildAt(heroIndex) as? ImageView  && 7 == heroPower) {
                                         mediaPlayerVictory.start()
+                                        gameEnd2()
                                     }
                                 }
                             }
